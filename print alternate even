@@ -2,22 +2,20 @@ package practicingjava;
 import java.util.Scanner;
 public class Main {
  public static void main(String[] args) {
-
-	         Scanner sc = new Scanner(System.in);
+    Scanner sc=new Scanner(System.in);
 	         System.out.println("enter the range1:");
-	         int n1 = sc.nextInt();
+	         int n1=sc.nextInt();
 	         System.out.println("enter the range2:");
-	         int n2 = sc.nextInt();
-
-	         if (n1 <= 0 || n2 <= 0 || n1 > n2) {
+	         int n2=sc.nextInt();
+	         if (n1<=0||n2<=0||n1>n2) {
 	             System.out.println("Invalid Inputs");
 	         } else {
 	             boolean first = true;
-	             for (int i = n1; i <= n2; i++) {
-	                 if (i % 2 == 0) {
+	             for (int i=n1;i<=n2;i++) {
+	                 if (i%2==0) {
 	                     if (!first) System.out.print(" ");
 	                     System.out.print(i);
-	                     first = false;
+	                     first=false;
 	                 }
 	             }
 	             System.out.println();
