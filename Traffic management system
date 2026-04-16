@@ -1,0 +1,36 @@
+import java.util.*;
+class TrafficSignal {
+    int vehicles;
+    int greenTime;
+    TrafficSignal(int vehicles) {
+        this.vehicles = vehicles;
+    }
+    void calculateGreenTime(int totalVehicles) {
+        this.greenTime = (vehicles*60)/totalVehicles;
+    }
+}
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc=new Scanner(System.in);
+        System.out.print("Enter number of roads: ");
+        int n=sc.nextInt();
+        TrafficSignal[] signals=new TrafficSignal[n];
+        int totalVehicles=0;
+        for (int i=0;i<n;i++) {
+            System.out.print("Enter vehicles on road "+(i+1)+":");
+            int v=sc.nextInt();
+            signals[i]=new TrafficSignal(v);
+            totalVehicles+=v;
+        }
+        for (int i=0;i<n;i++) {
+            signals[i].calculateGreenTime(totalVehicles);
+        }
+        System.out.println("\n--- Traffic Signal Timing ---");
+        for (int i = 0; i < n; i++) {
+            System.out.println("Road " + (i + 1) + 
+                " -> Vehicles: " + signals[i].vehicles + 
+                ", Green Time: " + signals[i].greenTime + " sec");
+        }
+        sc.close();
+    }
+}
