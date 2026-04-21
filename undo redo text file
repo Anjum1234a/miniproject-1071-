@@ -1,0 +1,93 @@
+import java.io.*;
+import java.util.*;
+public class UndoRedoFile {
+    static Stack<String> undoStack = new Stack<>();
+    static Stack<String> redoStack = new Stack<>();
+    static final String FILE = "data.txt";
+    static void writeFile(String content) throws Exception {
+        FileWriter fw = new FileWriter(FILE);
+        fw.write(content);
+        fw.close();
+    }
+
+    static String readFile() throws Exception {
+        BufferedReader br = new BufferedReader(new FileReader(FILE));
+        StringBuilder sb = new StringBuilder();
+        String line;
+
+        while ((line = br.readLine()) != null) {
+            sb.append(line).append("\n");
+        }
+        br.close();
+        return sb.toString();
+    }
+
+    static void addText(String newText) throws Exception {
+        String current = readFile();
+        undoStack.push(current);
+        redoStack.clear();
+
+        current += newText;
+        writeFile(current);
+    }
+    static void undo() throws Exception {
+        if (!undoStack.isEmpty()) {
+            String current = readFile();
+            redoStack.push(current);
+
+            String prev = undoStack.pop();
+            writeFile(prev);
+
+            System.out.println("Undo Done");
+        } else {
+            System.out.println("Nothing to Undo");
+        }
+    }
+    static void redo() throws Exception {
+        if (!redoStack.isEmpty()) {
+            String current = readFile();
+            undoStack.push(current);
+
+            String next = redoStack.pop();
+            writeFile(next);
+
+            System.out.println("Redo Done");
+        } else {
+            System.out.println("Nothing to Redo");
+        }
+    }
+    public static void main(String[] args) throws Exception {
+        Scanner sc = new Scanner(System.in);
+        writeFile("");
+
+        while (true) {
+            System.out.println("\n1.Add Text 2.Undo 3.Redo 4.View 5.Exit");
+            int ch = sc.nextInt();
+            sc.nextLine();
+
+            switch (ch) {
+                case 1:
+                    System.out.print("Enter text: ");
+                    String text = sc.nextLine();
+                    addText(text + "\n");
+                    break;
+
+                case 2:
+                    undo();
+                    break;
+
+                case 3:
+                    redo();
+                    break;
+
+                case 4:
+                    System.out.println("File Content:");
+                    System.out.println(readFile());
+                    break;
+
+                case 5:
+                    System.exit(0);
+            }
+        }
+    }
+}
