@@ -1,0 +1,158 @@
+import java.io.*;
+import java.util.*;
+
+class Student implements Serializable {
+    int id, marks;
+    String name;
+    Student next;
+
+    Student(int id, String name, int marks) {
+        this.id = id;
+        this.name = name;
+        this.marks = marks;
+        this.next = null;
+    }
+}
+
+public class Main {
+    static Student head = null;
+    static final String FILE = "students.dat";
+
+    static void insert(int id, String name, int marks) {
+        Student newNode = new Student(id, name, marks);
+        newNode.next = head;
+        head = newNode;
+    }
+
+    static void delete(int id) {
+        Student temp = head, prev = null;
+
+        while (temp != null && temp.id != id) {
+            prev = temp;
+            temp = temp.next;
+        }
+
+        if (temp == null) {
+            System.out.println("Student Not Found");
+            return;
+        }
+
+        if (prev == null)
+            head = temp.next;
+        else
+            prev.next = temp.next;
+
+        System.out.println("Deleted Successfully");
+    }
+
+    static void search(int id) {
+        Student temp = head;
+        while (temp != null) {
+            if (temp.id == id) {
+                System.out.println("Found: " + temp.id + " " + temp.name + " " + temp.marks);
+                return;
+            }
+            temp = temp.next;
+        }
+        System.out.println("Not Found");
+    }
+
+    static void sort() {
+        for (Student i = head; i != null; i = i.next) {
+            for (Student j = i.next; j != null; j = j.next) {
+                if (i.marks > j.marks) {
+                    int tempMarks = i.marks;
+                    i.marks = j.marks;
+                    j.marks = tempMarks;
+
+                    String tempName = i.name;
+                    i.name = j.name;
+                    j.name = tempName;
+
+                    int tempId = i.id;
+                    i.id = j.id;
+                    j.id = tempId;
+                }
+            }
+        }
+        System.out.println("Sorted by Marks");
+    }
+
+    static void display() {
+        Student temp = head;
+        while (temp != null) {
+            System.out.println(temp.id + " " + temp.name + " " + temp.marks);
+            temp = temp.next;
+        }
+    }
+
+    static void saveToFile() throws Exception {
+        ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(FILE));
+        Student temp = head;
+        while (temp != null) {
+            out.writeObject(temp);
+            temp = temp.next;
+        }
+        out.close();
+        System.out.println("Saved to File");
+    }
+
+    static void loadFromFile() throws Exception {
+        ObjectInputStream in = new ObjectInputStream(new FileInputStream(FILE));
+        head = null;
+        try {
+            while (true) {
+                Student s = (Student) in.readObject();
+                insert(s.id, s.name, s.marks);
+            }
+        } catch (EOFException e) {
+          
+        }
+        in.close();
+        System.out.println("Loaded from File");
+    }
+    public static void main(String[] args) throws Exception {
+        Scanner sc = new Scanner(System.in);
+
+        while (true) {
+            System.out.println("\n1.Insert 2.Delete 3.Search 4.Sort 5.Display 6.Save 7.Load 8.Exit");
+            int ch = sc.nextInt();
+
+            switch (ch) {
+                case 1:
+                    System.out.print("Enter ID Name Marks: ");
+                    insert(sc.nextInt(), sc.next(), sc.nextInt());
+                    break;
+
+                case 2:
+                    System.out.print("Enter ID to delete: ");
+                    delete(sc.nextInt());
+                    break;
+
+                case 3:
+                    System.out.print("Enter ID to search: ");
+                    search(sc.nextInt());
+                    break;
+
+                case 4:
+                    sort();
+                    break;
+
+                case 5:
+                    display();
+                    break;
+
+                case 6:
+                    saveToFile();
+                    break;
+
+                case 7:
+                    loadFromFile();
+                    break;
+
+                case 8:
+                    System.exit(0);
+            }
+        }
+    }
+}
